@@ -26,11 +26,11 @@ def sinkhorn(a,b,C,lam=50,eps=1,numiter=500,lam2=None,pen=None,
         elif pen=="kl":
             prox=prox_KL(G.T@u,b,lam2,eps)
         elif pen=="sinkhorn":
-            uy,vy=prox_sinkhorn(G.T@u,b,Gy,eps/lam,eps2,numiter2,uy)
+            uy,vy=prox_sinkhorn(G.T@u,b,Gy,eps/lam2,eps2,numiter2,uy)
             Qy=uy.reshape((-1, 1)) * Gy * vy.reshape((1, -1)) 
             prox=torch.sum(Qy,axis=1)
         elif pen=="UOT_sinkhorn":
-            uy,vy=prox_UOT_sinkhorn(G.T@u,b,Gy,eps/lam,eps2,numiter2,lam3,uy)
+            uy,vy=prox_UOT_sinkhorn(G.T@u,b,Gy,eps/lam2,eps2,numiter2,lam3,uy)
             Qy=uy.reshape((-1, 1)) * Gy * vy.reshape((1, -1))
             prox=torch.sum(Qy,axis=1)
                                    
@@ -41,11 +41,11 @@ def sinkhorn(a,b,C,lam=50,eps=1,numiter=500,lam2=None,pen=None,
         elif pen=="kl":
             prox=prox_KL(G@v,a,lam,eps)
         elif pen=="sinkhorn":
-            ux,vx=prox_sinkhorn(G@v,a,Gx,lam/eps,eps2,numiter2,ux)
+            ux,vx=prox_sinkhorn(G@v,a,Gx,eps/lam,eps2,numiter2,ux)
             Qx=ux.reshape((-1, 1)) * Gx * vx.reshape((1, -1)) 
             prox=torch.sum(Qx,axis=1)
         elif pen=="UOT_sinkhorn":
-            ux,vx=prox_UOT_sinkhorn(G@v,a,Gx,lam/eps,eps2,numiter2,lam3,ux)
+            ux,vx=prox_UOT_sinkhorn(G@v,a,Gx,eps/lam,eps2,numiter2,lam3,ux)
             Qx=ux.reshape((-1, 1)) * Gx * vx.reshape((1, -1))
             prox=torch.sum(Qx,axis=1) 
   

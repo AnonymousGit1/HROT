@@ -27,7 +27,7 @@ def logsinkhorn(a,b,C,lam=50,eps=1,numiter=500,lam2=None,pen=None,
         if pen=="kl":
             logprox=logprox_KL(torch.logsumexp(M + f[:,None],dim=0),logb,lam2,eps)      
         if pen=="sinkhorn":
-            fy,gy=logprox_sinkhorn(torch.logsumexp(M + f[:,None],dim=0),logb,My,lam2/eps,eps2,numiter2,fy)
+            fy,gy=logprox_sinkhorn(torch.logsumexp(M + f[:,None],dim=0),logb,My,eps/lam2,eps2,numiter2,fy)
             Qy=torch.exp(fy.reshape((-1, 1)) + My + gy.reshape((1, -1)))
             logprox=torch.log(torch.sum(Qy,axis=1))
         #if pen=="UOT_sinkhorn": #log-domain UOT_sinkhorn tends to not converge
@@ -43,7 +43,7 @@ def logsinkhorn(a,b,C,lam=50,eps=1,numiter=500,lam2=None,pen=None,
         if pen=="kl":
             logprox=logprox_KL(torch.logsumexp(M + g[None,:],dim=1),loga,lam,eps)        
         if pen=="sinkhorn":
-            fx,gx=logprox_sinkhorn(torch.logsumexp(M + g[None,:],dim=1),loga,Mx,lam/eps,eps2,numiter2,fx)
+            fx,gx=logprox_sinkhorn(torch.logsumexp(M + g[None,:],dim=1),loga,Mx,eps/lam,eps2,numiter2,fx)
             Qx=torch.exp(fx.reshape((-1, 1)) + Mx + gx.reshape((1, -1)))
             logprox=torch.log(torch.sum(Qx,axis=1))
         #if pen=="UOT_sinkhorn":
