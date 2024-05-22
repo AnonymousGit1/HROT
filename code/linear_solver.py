@@ -31,6 +31,30 @@ def UOT_W(a,b,C,lam,lam2=None,Cx=None,Cy=None,innerplan=False,solver="ECOS"):
         return pi.value,Qx.value,Qy.value
     else:
         return pi.value
+        
+def LatentOT(a,b,Cx,Cz,Cy,solver="ECOS"):
+
+    n=Cx.shape[0]
+    m=Cy.shape[1]
+    nz,mz=Cz.shape
+        
+    pix = cp.Variable((n,nz))
+    piz=cp.Variable((nz,mz))
+    piy=cp.Variable((mz,m))
+
+    ### penalization Wasserstein ###
+    objective = cp.Minimize(cp.sum(cp.multiply(pix,Cx))
+                +cp.sum(cp.multiply(piy,Cy))
+                +cp.sum(cp.multiply(piz,Cz)))
+    constraints = [pix>=0,piz>=0,piy>=0,
+                   pix@torch.ones(nz)==a,
+                   pix.T@torch.ones(n)==piz@torch.ones(mz),
+                   piz.T@torch.ones(nz)==piy@torch.ones(m),
+                   piy.T@torch.ones(mz)==b]
+
+    prob = cp.Problem(objective, constraints)
+    result = prob.solve(solver=solver)
+    return pix.value,piy.value,piz.value
    
 def UOT_KL(a,b,C,lam,lam2=None,solver="ECOS"):
     if lam2 is None:
