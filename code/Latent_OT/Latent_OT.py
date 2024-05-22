@@ -48,14 +48,14 @@ def LOT_fixsupp(Kx, Kz, Ky,mu,nu, niter=100, tol=1e-5, epsilon=0, clip_val=np.in
     dimy = Ky.shape[1]
     dimz1, dimz2 = Kz.shape
 
-    ax=np.ones((dimx,))/dimx
-    bx=np.ones((dimz1,))/dimz1
-    ay=np.ones((dimz2,))/dimz2
-    by=np.ones((dimz1,))/dimz1
-    az=np.ones((dimz1,))/dimz1
-    bz=np.ones((dimz2,))/dimz2
-    wxz=np.ones((dimz1,))/dimz1
-    wzy=np.ones((dimz2))/dimz2
+    ax=np.ones((dimx,))
+    bx=np.ones((dimz1,))
+    ay=np.ones((dimz2,))
+    by=np.ones((dimz1,))
+    az=np.ones((dimz1,))
+    bz=np.ones((dimz2,))
+    wxz=np.ones((dimz1,))
+    wzy=np.ones((dimz2))
     
     for i in range(1, niter + 1):   
         ax = np.exp(np.minimum(np.log(np.maximum(mu,epsilon1)) - np.log(np.maximum(Kx.dot(bx), epsilon1)), clip_val))
@@ -78,8 +78,8 @@ def LOT_fixsupp(Kx, Kz, Ky,mu,nu, niter=100, tol=1e-5, epsilon=0, clip_val=np.in
 
         ay = np.exp(np.minimum(np.log(np.maximum(wzy, epsilon)) - np.log(np.maximum(Ky.dot(by), epsilon)), clip_val))
         err1y = LA.norm(by * Ky.T.dot(ay) - nu, ord=1)
-        
-        print(max(err1x, err2x, err1z, err2z, err1y, err2y))
+        #if i==niter:
+        #    print(max(err1x, err2x, err1z, err2z, err1y, err2y))
         if max(err1x, err2x, err1z, err2z, err1y, err2y) < tol:
             break
 
